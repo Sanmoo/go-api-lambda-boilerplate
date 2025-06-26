@@ -18,6 +18,7 @@ enum Versions {
   v010: "0.1.0",
 }
 
+
 enum BookStatus {
   read,
   to_read,
@@ -25,6 +26,7 @@ enum BookStatus {
   paused,
   gave_up,
 }
+
 
 enum MovieStatus {
   watched,
