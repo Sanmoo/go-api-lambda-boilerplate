@@ -1,6 +1,6 @@
 emit:
   - "@typespec/openapi3"
-output-dir: "{project-root}/../"
+output-dir: "{project-root}/"
 options:
   "@typespec/openapi3":
     output-file: "openapi.yml"

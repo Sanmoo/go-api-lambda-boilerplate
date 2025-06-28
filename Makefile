@@ -1,6 +1,6 @@
-API_DESIGN_SRCS := $(shell find api -path api/node_modules -prune -o -print)
+API_DESIGN_SRCS := api/tspconfig.yaml api/main.tsp
 
-all: openapi
+all: openapi-generated
 	
 openapi: api/openapi.yml
 	
@@ -11,7 +11,7 @@ api/node_modules/.bin/tsp:
 	cd api && npm i
 
 lambdas/gen.go: api/openapi.yml
-	go tool oapi-codegen -config ../api/oid-codegen.yml ../api/openapi.yml
+	go tool oapi-codegen -config api/oid-codegen.yml api/openapi.yml
 
 openapi-generated: lambdas/gen.go
 	
