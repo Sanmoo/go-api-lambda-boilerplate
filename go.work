@@ -1,6 +1,8 @@
 go 1.24.4
 
 use (
+	./adaptors/inbound/aws
+	./adaptors/inbound/http
+	./adaptors/inbound/local
 	./core
-	./lambdas
 )

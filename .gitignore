@@ -1,3 +1,6 @@
+artifacts/
+plan
+bootstrap
 gen.go
 .terraform
 node_modules
