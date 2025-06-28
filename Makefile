@@ -1,22 +1,21 @@
 API_DESIGN_SRCS := $(shell find api -path api/node_modules -prune -o -print)
 
-all: openapi.yml
+all: openapi
 	
-openapi.yml: $(API_DESIGN_SRCS) api/node_modules/.bin/tsp
+openapi: api/openapi.yml
+	
+api/openapi.yml: $(API_DESIGN_SRCS) api/node_modules/.bin/tsp
 	cd api && tsp compile .
 	
 api/node_modules/.bin/tsp:
 	cd api && npm i
 
-openapi-generated/go.mod: openapi.yml
-	mkdir -p openapi-generated
-	cd openapi-generated && \
-		npx openapi-generator-cli generate -i ../openapi.yml -g go \
-	    --additional-properties=isGoSubmodule=true,useSingleRequestParameter=true,withInterfaces=true \
-		sed -i 's/sdf/sdf/' openapi-generated/go.mod
+lambdas/gen.go: api/openapi.yml
+	go tool oapi-codegen -config ../api/oid-codegen.yml ../api/openapi.yml
 
-
-openapi-generated: openapi-generated/.openapi-generator/FILES
-
+openapi-generated: lambdas/gen.go
+	
 clean:
-	rm -rf openapi.yml openapi-generated
+	rm -rf api/openapi.yml
+	rm -rf api/node_modules
+	rm -rf lambdas/gen.go

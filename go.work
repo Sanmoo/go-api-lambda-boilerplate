@@ -2,5 +2,5 @@ go 1.24.4
 
 use (
 	./core
-	./lambdas/books
+	./lambdas
 )

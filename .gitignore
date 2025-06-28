@@ -1,3 +1,4 @@
+gen.go
 .terraform
 node_modules
 openapi-generated/*
