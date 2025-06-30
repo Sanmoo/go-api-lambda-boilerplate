@@ -1473,15 +1473,15 @@ components:
         - director
         - genre
         - status
-      properties:
-        director:
-          type: string
-        genre:
-          type: string
-        status:
-          $ref: '#/components/schemas/MovieStatus'
       allOf:
         - $ref: '#/components/schemas/Media'
+        - properties:
+            director:
+              type: string
+            genre:
+              type: string
+            status:
+              $ref: '#/components/schemas/MovieStatus'
       example:
         director: Christopher Nolan
         genre: Action
@@ -1500,13 +1500,13 @@ components:
       required:
         - type
         - status
-      properties:
-        type:
-          $ref: '#/components/schemas/NonElectronicGameType'
-        status:
-          $ref: '#/components/schemas/NonElectronicGameStatus'
       allOf:
         - $ref: '#/components/schemas/Media'
+        - properties:
+            type:
+              $ref: '#/components/schemas/NonElectronicGameType'
+            status:
+              $ref: '#/components/schemas/NonElectronicGameStatus'
       example:
         type: board
         status: tried
@@ -1531,16 +1531,16 @@ components:
         - seasons
         - finished
         - status
-      properties:
-        seasons:
-          type: integer
-          format: int32
-        finished:
-          type: boolean
-        status:
-          $ref: '#/components/schemas/TVSeriesStatus'
       allOf:
         - $ref: '#/components/schemas/Media'
+        - properties:
+            seasons:
+              type: integer
+              format: int32
+            finished:
+              type: boolean
+            status:
+              $ref: '#/components/schemas/TVSeriesStatus'
       example:
         seasons: 5
         finished: true
