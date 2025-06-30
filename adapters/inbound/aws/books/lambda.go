@@ -4,7 +4,7 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/Sanmoo/go-api-lambda-boilerplate/adaptors/inbound/http"
+	"github.com/Sanmoo/go-api-lambda-boilerplate/adapters/inbound/http"
 	alg "github.com/akrylysov/algnhsa"
 )
 

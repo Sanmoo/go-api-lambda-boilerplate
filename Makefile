@@ -11,28 +11,28 @@ api/openapi.yml: $(API_DESIGN_SRCS) api/node_modules/.bin/tsp
 api/node_modules/.bin/tsp:
 	cd api && npm i
 
-adaptors/inbound/aws/gen.go: api/openapi.yml
-	go tool oapi-codegen -config api/oid-codegen.yml api/openapi.yml
+adapters/inbound/http/gen.go: api/openapi.yml api/oapi-codegen.yml
+	go tool oapi-codegen -config api/oapi-codegen.yml api/openapi.yml
 
-openapi-generated: adaptors/inbound/http/gen.go
+openapi-generated: adapters/inbound/http/gen.go
 	
 # Lambda Build tasks
 lambdas: books
 
-books: adaptors/inbound/aws/infra/artifacts/books.zip
+books: adapters/inbound/aws/infra/artifacts/books.zip
 
-adaptors/inbound/aws/infra/artifacts/books.zip: adaptors/inbound/aws/books/bootstrap
+adapters/inbound/aws/infra/artifacts/books.zip: adapters/inbound/aws/books/bootstrap
 	
-adaptors/inbound/aws/books/bootstrap: adaptors/inbound/aws/books/lambda.go
-	cd adaptors/inbound/aws/books && GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bootstrap lambda.go
-	cd adaptors/inbound/aws/books && zip books.zip bootstrap
-	mkdir -p adaptors/inbound/aws/infra/artifacts
-	mv adaptors/inbound/aws/books/books.zip adaptors/inbound/aws/infra/artifacts
+adapters/inbound/aws/books/bootstrap: adapters/inbound/aws/books/lambda.go
+	cd adapters/inbound/aws/books && GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bootstrap lambda.go
+	cd adapters/inbound/aws/books && zip books.zip bootstrap
+	mkdir -p adapters/inbound/aws/infra/artifacts
+	mv adapters/inbound/aws/books/books.zip adapters/inbound/aws/infra/artifacts
 	
 # Deployment tasks
 terraform-init:
 	cd infra && terraform init
-	cd adaptors/inbound/aws/infra && terraform init
+	cd adapters/inbound/aws/infra && terraform init
 
 plan-infra-deployment:
 	cd infra && terraform plan -out=plan
@@ -41,17 +41,17 @@ deploy-infra:
 	cd infra && terraform apply plan
 
 plan: lambdas
-	cd adaptors/inbound/aws/infra && terraform plan -out=plan
+	cd adapters/inbound/aws/infra && terraform plan -out=plan
 	
 make plan-destroy:
-	cd adaptors/inbound/aws/infra && terraform plan -destroy -out=plan
+	cd adapters/inbound/aws/infra && terraform plan -destroy -out=plan
 
 deploy:
-	cd adaptors/inbound/aws/infra && terraform apply plan
+	cd adapters/inbound/aws/infra && terraform apply plan
 	
 # Development tasks
 server:
-	go run adaptors/inbound/local/main.go
+	go run adapters/inbound/local/main.go
 	
 # Cleanup Tasks
 clean-lambdas:

@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	adpt "github.com/Sanmoo/go-api-lambda-boilerplate/adaptors/inbound/http"
+	adpt "github.com/Sanmoo/go-api-lambda-boilerplate/adapters/inbound/http"
 )
 
 type LocalHandler struct {

@@ -1,9 +1,9 @@
-module github.com/Sanmoo/go-api-lambda-boilerplate/adaptors/inbound/aws
+module github.com/Sanmoo/go-api-lambda-boilerplate/adapters/inbound/aws
 
 go 1.24.4
 
 require (
-	github.com/Sanmoo/go-api-lambda-boilerplate/adaptors/inbound/http v0.0.0-00010101000000-000000000000
+	github.com/Sanmoo/go-api-lambda-boilerplate/adapters/inbound/http v0.0.0-00010101000000-000000000000
 	github.com/akrylysov/algnhsa v1.1.0
 )
 
@@ -15,4 +15,4 @@ require (
 	github.com/oapi-codegen/runtime v1.1.1 // indirect
 )
 
-replace github.com/Sanmoo/go-api-lambda-boilerplate/adaptors/inbound/http => ../http
+replace github.com/Sanmoo/go-api-lambda-boilerplate/adapters/inbound/http => ../http
