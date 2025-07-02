@@ -13,6 +13,7 @@ require (
 	github.com/aws/aws-lambda-go v1.47.0 // indirect
 	github.com/google/uuid v1.5.0 // indirect
 	github.com/oapi-codegen/runtime v1.1.1 // indirect
+	github.com/stretchr/testify v1.9.0 // indirect
 )
 
 replace github.com/Sanmoo/go-api-lambda-boilerplate/adapters/inbound/http => ../http

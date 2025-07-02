@@ -2,7 +2,7 @@
 package: http
 generate:
   models: true
-  strict-server: true
+  std-http-server: true
 output: adapters/inbound/http/gen.go
 output-options:
   skip-prune: true

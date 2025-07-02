@@ -7,8 +7,14 @@ import (
 	adpt "github.com/Sanmoo/go-api-lambda-boilerplate/adapters/inbound/http"
 )
 
+type LocalBaseHandler struct {
+	adpt.BlankHandler
+}
+
 type LocalHandler struct {
-	adpt.BooksListHandler
+	LocalBaseHandler
+	adpt.BooksHandler
+	adpt.MoviesListHandler
 }
 
 func newLocalHandler() LocalHandler {

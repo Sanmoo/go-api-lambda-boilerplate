@@ -8,7 +8,6 @@ import (
 )
 
 type MoviesListHandler struct {
-	BaseHandler
 }
 
 func (MoviesListHandler) MoviesList(w http.ResponseWriter, r *http.Request, params MoviesListParams) {
@@ -16,12 +15,16 @@ func (MoviesListHandler) MoviesList(w http.ResponseWriter, r *http.Request, para
 	response := make([]Movie, len(movies))
 
 	for i := range movies {
-		rating := int32(*movies[i].Rating)
 		response[i] = Movie{
+			Director: &movies[i].Director,
+			Genre:    &movies[i].Genre,
+			Id:       movies[i].ID,
 			Title:    movies[i].Title,
-			Id:       &movies[i].ID,
-			Rating:   &rating,
-			Director: movies[i].Director,
+		}
+
+		if movies[i].Rating != nil {
+			rating := int32(*movies[i].Rating)
+			response[i].Rating = &rating
 		}
 	}
 

@@ -2,13 +2,18 @@ module github.com/Sanmoo/go-api-lambda-boilerplate/adapters/inbound/http
 
 go 1.24.4
 
-require github.com/Sanmoo/go-api-lambda-boilerplate/core v0.0.0-20250628120149-1dc9e5f4ee3b
+require (
+	github.com/Sanmoo/go-api-lambda-boilerplate/core v0.0.0-20250628120149-1dc9e5f4ee3b
+	github.com/oapi-codegen/runtime v1.1.1
+)
 
 require (
+	github.com/apapsch/go-jsonmerge/v2 v2.0.0 // indirect
 	github.com/dprotaso/go-yit v0.0.0-20220510233725-9ba8df137936 // indirect
 	github.com/getkin/kin-openapi v0.127.0 // indirect
 	github.com/go-openapi/jsonpointer v0.21.0 // indirect
 	github.com/go-openapi/swag v0.23.0 // indirect
+	github.com/google/uuid v1.5.0 // indirect
 	github.com/invopop/yaml v0.3.1 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect

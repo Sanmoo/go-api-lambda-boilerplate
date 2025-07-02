@@ -53,7 +53,7 @@ type Book struct {
 	Media
 	Author string
 	Genre  string
-	Status BookStatus
+	Status *BookStatus
 }
 
 // BookStatus defines model for BookStatus.
@@ -72,8 +72,8 @@ type ElectronicGameStatus string
 
 // Media defines model for Media.
 type Media struct {
-	ID     string
-	Rating *int
+	ID     *string
+	Rating *int32
 	Title  string
 }
 
@@ -104,9 +104,9 @@ type NonElectronicGameType string
 // TVSeries defines model for TVSeries.
 type TVSeries struct {
 	Media
-	Seasons  int
-	Finished bool
-	Status   TVSeriesStatus
+	Seasons  *int32
+	Finished *bool
+	Status   *TVSeriesStatus
 }
 
 // TVSeriesStatus defines model for TVSeriesStatus.

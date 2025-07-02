@@ -1,3 +1,5 @@
+.SECONDARY:
+
 API_DESIGN_SRCS := api/tspconfig.yaml api/main.tsp
 
 # General tasks
@@ -17,17 +19,19 @@ adapters/inbound/http/gen.go: api/openapi.yml api/oapi-codegen.yml
 openapi-generated: adapters/inbound/http/gen.go
 	
 # Lambda Build tasks
-lambdas: books
+LAMBDA_NAMES := books movies
+lambdas: $(addprefix build-,$(LAMBDA_NAMES))
 
-books: adapters/inbound/aws/infra/artifacts/books.zip
+build-%: adapters/inbound/aws/infra/artifacts/%.zip
+	@echo "Built lambda: $*"
 
-adapters/inbound/aws/infra/artifacts/books.zip: adapters/inbound/aws/books/bootstrap
-	
-adapters/inbound/aws/books/bootstrap: adapters/inbound/aws/books/lambda.go
-	cd adapters/inbound/aws/books && GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bootstrap lambda.go
-	cd adapters/inbound/aws/books && zip books.zip bootstrap
+adapters/inbound/aws/infra/artifacts/%.zip: adapters/inbound/aws/%/bootstrap
+	cd adapters/inbound/aws/$* && zip $*.zip bootstrap
 	mkdir -p adapters/inbound/aws/infra/artifacts
-	mv adapters/inbound/aws/books/books.zip adapters/inbound/aws/infra/artifacts
+	mv adapters/inbound/aws/$*/$*.zip adapters/inbound/aws/infra/artifacts
+
+adapters/inbound/aws/%/bootstrap: adapters/inbound/aws/%/lambda.go
+	cd adapters/inbound/aws/$* && GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bootstrap lambda.go
 	
 # Deployment tasks
 terraform-init:

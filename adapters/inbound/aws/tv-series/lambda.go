@@ -9,16 +9,16 @@ import (
 	alg "github.com/akrylysov/algnhsa"
 )
 
-type BooksHandler struct {
+type TVSeriesHandler struct {
 	aws.BaseHandler
-	http.BooksHandler
+	http.MoviesListHandler
 }
 
 func main() {
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 	logger.Debug("Initializing Lambda function", "function", "books")
 	defer logger.Debug("Function main finished", "function", "books")
-	handler := http.HandlerWithOptions(&BooksHandler{}, http.StdHTTPServerOptions{
+	handler := http.HandlerWithOptions(&MoviesHandler{}, http.StdHTTPServerOptions{
 		BaseURL: "/default",
 	})
 	alg.ListenAndServe(handler, nil)
