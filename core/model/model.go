@@ -92,7 +92,7 @@ type MovieStatus string
 type NonElectronicGame struct {
 	Media
 	Type   NonElectronicGameType
-	Status NonElectronicGameStatus
+	Status *NonElectronicGameStatus
 }
 
 // NonElectronicGameStatus defines model for NonElectronicGameStatus.

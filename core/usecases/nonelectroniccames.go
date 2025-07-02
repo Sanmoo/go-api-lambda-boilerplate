@@ -4,7 +4,7 @@ import (
 	"github.com/Sanmoo/go-api-lambda-boilerplate/core/model"
 )
 
-func NonElectronicCames() ([]model.NonElectronicGame, error) {
+func ListNonElectronicGames() ([]model.NonElectronicGame, error) {
 	nonelectronicGames := []model.NonElectronicGame{
 		{Media: model.Media{Title: "Chess", ID: ptr("1")}},
 		{Media: model.Media{Title: "Checkers", ID: ptr("2")}},

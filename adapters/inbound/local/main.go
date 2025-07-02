@@ -14,7 +14,10 @@ type LocalBaseHandler struct {
 type LocalHandler struct {
 	LocalBaseHandler
 	adpt.BooksHandler
-	adpt.MoviesListHandler
+	adpt.MoviesHandler
+	adpt.TvSeriesHandler
+	adpt.ElectronicGamesHandler
+	adpt.NonElectronicGamesHandler
 }
 
 func newLocalHandler() LocalHandler {

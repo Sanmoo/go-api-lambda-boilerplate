@@ -115,7 +115,7 @@ func ElectronicGameFromModel(game *model.ElectronicGame) *ElectronicGame {
 }
 
 func (n *NonElectronicGame) ToModel() (*model.NonElectronicGame, error) {
-	if n.Type == nil || n.Status == nil {
+	if n.Type == nil {
 		return nil, errors.New("type and status are required")
 	}
 
@@ -126,7 +126,7 @@ func (n *NonElectronicGame) ToModel() (*model.NonElectronicGame, error) {
 			Rating: n.Rating,
 		},
 		Type:   model.NonElectronicGameType(*n.Type),
-		Status: model.NonElectronicGameStatus(*n.Status),
+		Status: (*model.NonElectronicGameStatus)(n.Status),
 	}, nil
 }
 
@@ -136,7 +136,6 @@ func NonElectronicGameFromModel(game *model.NonElectronicGame) *NonElectronicGam
 		Title:  game.Title,
 		Rating: game.Rating,
 		Type:   (*NonElectronicGameType)(&game.Type),
-		Status: (*NonElectronicGameStatus)(&game.Status),
+		Status: (*NonElectronicGameStatus)(game.Status),
 	}
 }
-

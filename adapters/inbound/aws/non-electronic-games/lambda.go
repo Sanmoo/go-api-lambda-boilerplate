@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	aws.ListenAndServe(aws.BooksHandler{}, "books")
+	aws.ListenAndServe(aws.NonElectronicGamesHandler{}, "non-electronic-games")
 }

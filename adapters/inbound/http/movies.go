@@ -7,27 +7,77 @@ import (
 	"github.com/Sanmoo/go-api-lambda-boilerplate/core/usecases"
 )
 
-type MoviesListHandler struct {
+type MoviesHandler struct {
 }
 
-func (MoviesListHandler) MoviesList(w http.ResponseWriter, r *http.Request, params MoviesListParams) {
+func (MoviesHandler) MoviesList(w http.ResponseWriter, r *http.Request, params MoviesListParams) {
 	movies, _ := usecases.ListMovies()
 	response := make([]Movie, len(movies))
 
-	for i := range movies {
-		response[i] = Movie{
-			Director: &movies[i].Director,
-			Genre:    &movies[i].Genre,
-			Id:       movies[i].ID,
-			Title:    movies[i].Title,
-		}
-
-		if movies[i].Rating != nil {
-			rating := int32(*movies[i].Rating)
-			response[i].Rating = &rating
-		}
+	for i, movie := range movies {
+		response[i] = *MovieFromModel(&movie)
 	}
 
 	jsonRes, _ := json.Marshal(response)
 	w.Write([]byte(jsonRes))
+}
+
+func (MoviesHandler) MoviesCreate(w http.ResponseWriter, r *http.Request) {
+	requestMovie, _ := unmarshalFromReq[Movie](r)
+	modelMovie, err := requestMovie.ToModel()
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	createdMovie, err := usecases.CreateMovie(*modelMovie)
+
+	respondWithJSON(responseData{
+		data:       MovieFromModel(&createdMovie),
+		usecaseErr: err,
+		w:          w,
+		statusCode: http.StatusCreated,
+	})
+}
+
+func (MoviesHandler) MoviesGet(w http.ResponseWriter, r *http.Request, id string) {
+	movie, err := usecases.GetMovieByID(id)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+
+	respondWithJSON(responseData{
+		data:       MovieFromModel(&movie),
+		usecaseErr: nil,
+		w:          w,
+		statusCode: http.StatusOK,
+	})
+}
+
+func (MoviesHandler) MoviesUpdate(w http.ResponseWriter, r *http.Request, id string) {
+	requestMovie, _ := unmarshalFromReq[Movie](r)
+	requestMovie.Id = &id
+	modelMovie, err := requestMovie.ToModel()
+	updatedMovie, err := usecases.UpdateMovie(*modelMovie)
+
+	respondWithJSON(responseData{
+		data:       MovieFromModel(&updatedMovie),
+		usecaseErr: err,
+		w:          w,
+		statusCode: http.StatusOK,
+	})
+}
+
+func (MoviesHandler) MoviesDelete(w http.ResponseWriter, r *http.Request, id string) {
+	err := usecases.DeleteMovie(id)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
 }

@@ -19,7 +19,7 @@ adapters/inbound/http/gen.go: api/openapi.yml api/oapi-codegen.yml
 openapi-generated: adapters/inbound/http/gen.go
 	
 # Lambda Build tasks
-LAMBDA_NAMES := books movies
+LAMBDA_NAMES := books movies tv-series non-electronic-games electronic-games
 lambdas: $(addprefix build-,$(LAMBDA_NAMES))
 
 build-%: adapters/inbound/aws/infra/artifacts/%.zip
@@ -30,7 +30,7 @@ adapters/inbound/aws/infra/artifacts/%.zip: adapters/inbound/aws/%/bootstrap
 	mkdir -p adapters/inbound/aws/infra/artifacts
 	mv adapters/inbound/aws/$*/$*.zip adapters/inbound/aws/infra/artifacts
 
-adapters/inbound/aws/%/bootstrap: adapters/inbound/aws/%/lambda.go
+adapters/inbound/aws/%/bootstrap: adapters/inbound/aws/%/lambda.go adapters/inbound/http/gen.go adapters/inbound/aws/common.go
 	cd adapters/inbound/aws/$* && GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bootstrap lambda.go
 	
 # Deployment tasks

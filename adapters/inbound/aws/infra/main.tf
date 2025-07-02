@@ -24,6 +24,9 @@ locals {
   lambdas = {
     books =  "ANY /books"
     movies = "ANY /movies"
+    electronic-games = "ANY /electronic-games"
+    non-electronic-games = "ANY /non-electronic-games"
+    tv-series = "ANY /tv-series"
   }
 }
 
@@ -34,7 +37,7 @@ resource "aws_lambda_function" "lambda" {
   role          = data.aws_iam_role.iam_for_lambda.arn
   handler       = "run"
 
-  source_code_hash = filesha256("${path.module}/../${each.key}/lambda.go")
+  source_code_hash = filesha256("${path.module}/../${each.key}/bootstrap")
 
   runtime = "provided.al2"
 }
