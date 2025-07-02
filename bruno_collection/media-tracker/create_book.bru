@@ -1,0 +1,33 @@
+meta {
+  name: create_book
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{base_url}}/books
+  body: json
+  auth: oauth2
+}
+
+auth:oauth2 {
+  grant_type: client_credentials
+  access_token_url: {{token_url}}
+  refresh_token_url: 
+  client_id: {{client_id}}
+  client_secret: {{client_secret}}
+  scope: 
+  credentials_placement: body
+  credentials_id: credentials
+  token_placement: header
+  token_header_prefix: Bearer
+  auto_fetch_token: true
+  auto_refresh_token: true
+}
+
+body:json {
+  {
+    "genre": "Hey!",
+    "author": "Soy yo!"
+  }
+}
