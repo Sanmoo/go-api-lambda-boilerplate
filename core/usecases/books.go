@@ -28,3 +28,28 @@ func CreateBook(book model.Book) (model.Book, error) {
 
 	return book, nil
 }
+
+func UpdateBook(book model.Book) (model.Book, error) {
+	// This function would typically interact with a database or an external service
+	// to update an existing book. For now, we will return the book as is.
+
+	return book, nil
+}
+
+func DeleteBook(id string) error {
+	// This function would typically interact with a database or an external service
+	// to delete a book by its ID. For now, we will return nil to indicate success.
+
+	return nil
+}
+
+func GetBookByID(id string) (model.Book, error) {
+	// This function would typically interact with a database or an external service
+	// to retrieve a book by its ID. For now, we will return a static book.
+
+	book := model.Book{
+		Media: model.Media{Title: "The Great Gatsby", ID: &id},
+	}
+
+	return book, nil
+}

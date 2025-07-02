@@ -64,7 +64,7 @@ type ElectronicGame struct {
 	Media
 	Platform string
 	Genre    string
-	Status   ElectronicGameStatus
+	Status   *ElectronicGameStatus
 }
 
 // ElectronicGameStatus defines model for ElectronicGameStatus.
@@ -82,7 +82,7 @@ type Movie struct {
 	Media
 	Director string
 	Genre    string
-	Status   MovieStatus
+	Status   *MovieStatus
 }
 
 // MovieStatus defines model for MovieStatus.

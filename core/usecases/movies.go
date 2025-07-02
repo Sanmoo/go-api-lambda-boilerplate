@@ -26,3 +26,28 @@ func CreateMovie(movie model.Movie) (model.Movie, error) {
 
 	return movie, nil
 }
+
+func UpdateMovie(movie model.Movie) (model.Movie, error) {
+	// This function would typically interact with a database or an external service
+	// to update an existing movie. For now, we will return the movie as is.
+
+	return movie, nil
+}
+
+func DeleteMovie(id string) error {
+	// This function would typically interact with a database or an external service
+	// to delete a movie by its ID. For now, we will return nil to indicate success.
+
+	return nil
+}
+
+func GetMovieByID(id string) (model.Movie, error) {
+	// This function would typically interact with a database or an external service
+	// to retrieve a movie by its ID. For now, we will return a static movie.
+
+	movie := model.Movie{
+		Media: model.Media{Title: "The Great Gatsby", ID: &id},
+	}
+
+	return movie, nil
+}
