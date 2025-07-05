@@ -5,6 +5,8 @@ import (
 	"net/http"
 
 	adpt "github.com/Sanmoo/go-api-lambda-boilerplate/adapters/inbound/http"
+	"github.com/getkin/kin-openapi/openapi3"
+	middleware "github.com/oapi-codegen/nethttp-middleware"
 )
 
 type LocalBaseHandler struct {
@@ -26,8 +28,15 @@ func newLocalHandler() LocalHandler {
 
 func main() {
 	var server adpt.ServerInterface = newLocalHandler()
+
+	spec, err := openapi3.NewLoader().LoadFromData([]byte(adpt.OpenAPI))
+	must(err)
+	spec.Servers = nil
+
+	mw := middleware.OapiRequestValidatorWithOptions(spec, &middleware.Options{})
+
 	h := adpt.HandlerWithOptions(server, adpt.StdHTTPServerOptions{
-		BaseURL: "/default",
+		Middlewares: []adpt.MiddlewareFunc{mw},
 	})
 
 	s := &http.Server{

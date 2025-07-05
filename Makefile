@@ -56,7 +56,7 @@ deploy:
 	
 # Development tasks
 server:
-	go run adapters/inbound/local/main.go
+	cd adapters/inbound/local && go run .
 	
 # Cleanup Tasks
 clean-lambdas:
