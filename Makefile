@@ -1,3 +1,4 @@
+# Disable automatic deletion of intermediary files
 .SECONDARY:
 
 API_DESIGN_SRCS := api/tspconfig.yaml api/main.tsp
@@ -5,16 +6,16 @@ API_DESIGN_SRCS := api/tspconfig.yaml api/main.tsp
 # General tasks
 all: openapi-generated lambdas
 	
-openapi: api/openapi.yml
+openapi: adapters/inbound/http/openapi.yml
 	
-api/openapi.yml: $(API_DESIGN_SRCS) api/node_modules/.bin/tsp
+adapters/inbound/http/openapi.yml: $(API_DESIGN_SRCS) api/node_modules/.bin/tsp
 	cd api && tsp compile .
 	
 api/node_modules/.bin/tsp:
 	cd api && npm i
 
-adapters/inbound/http/gen.go: api/openapi.yml api/oapi-codegen.yml
-	go tool oapi-codegen -config api/oapi-codegen.yml api/openapi.yml
+adapters/inbound/http/gen.go: adapters/inbound/http/openapi.yml api/oapi-codegen.yml
+	go tool oapi-codegen -config api/oapi-codegen.yml adapters/inbound/http/openapi.yml
 
 openapi-generated: adapters/inbound/http/gen.go
 	
@@ -66,6 +67,6 @@ clean-lambdas:
 	rm -rf lambdas/infra/plan
 	
 clean: clean-lambdas
-	rm -rf api/openapi.yml
+	rm -rf adapters/inbound/http/openapi.yml
 	rm -rf api/node_modules
 	rm -rf lambdas/gen.go

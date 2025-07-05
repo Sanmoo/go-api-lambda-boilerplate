@@ -5,9 +5,8 @@ using TypeSpec.Http;
 using TypeSpec.Rest;
 using TypeSpec.Versioning;
 
-@service({
+@service(#{
   title: "Media Tracker",
-  description: "A REST API for tracking books, movies, TV series, electronic games, and non-electronic games.",
 })
 @versioned(Versions)
 @server("https://example.com", "Single server endpoint")
@@ -165,19 +164,14 @@ model Updated<T> {
   ...AcceptedResponse;
 }
 
-model Page<T> {
-  @pageItems
-  items: T[];
-}
-
-model ResourceCreated<T> {
+model ResourceCreated<T extends Media> {
   ...CreatedResponse;
   ...T;
 }
 
-model ResourceList<T> {
+model ResourceList<T extends Media> {
   ...OkResponse;
-  ...Page<T>;
+  @pageItems items: T[];
 }
 
 model ResourceAccepted<T> {
@@ -245,13 +239,13 @@ interface Crud<T extends Media> {
 
   @list
   @get
-  list(
+  op list(
     @query @offset skip?: int32 = 0,
     @query @pageSize perPage?: int32 = 100,
   ): ResourceList<T> | InternalServerErrorResponse | UnauthorizedErrorResponse;
 
   @delete
-  delete(
+  op delete(
     @path id: string,
   ): Deleted<T> | InternalServerErrorResponse | UnauthorizedErrorResponse;
 }

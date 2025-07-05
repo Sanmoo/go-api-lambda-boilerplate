@@ -4,4 +4,4 @@ output-dir: "{project-root}/"
 options:
   "@typespec/openapi3":
     output-file: "openapi.yml"
-    emitter-output-dir: "{output-dir}/"
+    emitter-output-dir: "{output-dir}/../adapters/inbound/http"

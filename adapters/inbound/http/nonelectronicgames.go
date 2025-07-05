@@ -28,11 +28,7 @@ func (NonElectronicGamesHandler) NonElectronicGamesCreate(w http.ResponseWriter,
 	requestPayload, _ := io.ReadAll(r.Body)
 	json.Unmarshal(requestPayload, &requestGame)
 
-	modelGame, err := requestGame.ToModel()
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
+	modelGame, _ := requestGame.ToModel()
 
 	createdGame, _ := usecases.CreateNonElectronicGame(*modelGame)
 	jsonRes, _ := json.Marshal(NonElectronicGameFromModel(&createdGame))

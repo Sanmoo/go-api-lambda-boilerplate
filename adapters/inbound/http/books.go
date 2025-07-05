@@ -5,6 +5,8 @@ import (
 	"io"
 	"net/http"
 
+	_ "embed"
+
 	"github.com/Sanmoo/go-api-lambda-boilerplate/core/usecases"
 )
 
