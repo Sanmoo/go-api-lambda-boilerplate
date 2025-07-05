@@ -5,11 +5,12 @@ using TypeSpec.Http;
 using TypeSpec.Rest;
 using TypeSpec.Versioning;
 
-@service(#{
+@service({
   title: "Media Tracker",
 })
 @versioned(Versions)
 @server("https://example.com", "Single server endpoint")
+@route("/default")
 namespace MediaTracker;
 
 // Enums
