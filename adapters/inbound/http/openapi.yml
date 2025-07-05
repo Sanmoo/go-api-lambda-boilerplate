@@ -9,7 +9,7 @@ tags:
   - name: Movies
   - name: TV Series
 paths:
-  /default/books:
+  /books:
     post:
       operationId: Books_create
       parameters: []
@@ -128,7 +128,7 @@ paths:
                   - message
       tags:
         - Books
-  /default/books/{id}:
+  /books/{id}:
     get:
       operationId: Books_read
       parameters:
@@ -285,7 +285,7 @@ paths:
                   - message
       tags:
         - Books
-  /default/electronic-games:
+  /electronic-games:
     post:
       operationId: ElectronicGames_create
       parameters: []
@@ -404,7 +404,7 @@ paths:
                   - message
       tags:
         - Electronic Games
-  /default/electronic-games/{id}:
+  /electronic-games/{id}:
     get:
       operationId: ElectronicGames_read
       parameters:
@@ -561,7 +561,7 @@ paths:
                   - message
       tags:
         - Electronic Games
-  /default/movies:
+  /movies:
     post:
       operationId: Movies_create
       parameters: []
@@ -680,7 +680,7 @@ paths:
                   - message
       tags:
         - Movies
-  /default/movies/{id}:
+  /movies/{id}:
     get:
       operationId: Movies_read
       parameters:
@@ -837,7 +837,7 @@ paths:
                   - message
       tags:
         - Movies
-  /default/non-electronic-games:
+  /non-electronic-games:
     post:
       operationId: NonElectronicGames_create
       parameters: []
@@ -956,7 +956,7 @@ paths:
                   - message
       tags:
         - Non-Electronic Games
-  /default/non-electronic-games/{id}:
+  /non-electronic-games/{id}:
     get:
       operationId: NonElectronicGames_read
       parameters:
@@ -1113,7 +1113,7 @@ paths:
                   - message
       tags:
         - Non-Electronic Games
-  /default/tv-series:
+  /tv-series:
     post:
       operationId: TV_Series_create
       parameters: []
@@ -1232,7 +1232,7 @@ paths:
                   - message
       tags:
         - TV Series
-  /default/tv-series/{id}:
+  /tv-series/{id}:
     get:
       operationId: TV_Series_read
       parameters:

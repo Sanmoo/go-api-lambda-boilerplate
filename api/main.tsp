@@ -10,7 +10,6 @@ using TypeSpec.Versioning;
 })
 @versioned(Versions)
 @server("https://example.com", "Single server endpoint")
-@route("/default")
 namespace MediaTracker;
 
 // Enums
