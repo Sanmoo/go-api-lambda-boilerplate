@@ -4,52 +4,32 @@ import (
 	"github.com/Sanmoo/go-api-lambda-boilerplate/core/model"
 )
 
-func ListElectronicGames() ([]model.ElectronicGame, error) {
-	// This function would typically interact with a database or an external service
-	// to retrieve a list of electronic games. For now, we will return a static list.
+type ElectronicGamesUsecases struct {
+	repository Repository[model.ElectronicGame]
+}
 
-	id1 := "1"
-	id2 := "2"
-	id3 := "3"
-	id4 := "4"
-	games := []model.ElectronicGame{
-		{Media: model.Media{Title: "The Legend of Zelda: Breath of the Wild", ID: &id1}},
-		{Media: model.Media{Title: "Super Mario Odyssey", ID: &id2}},
-		{Media: model.Media{Title: "God of War", ID: &id3}},
-		{Media: model.Media{Title: "The Witcher 3: Wild Hunt", ID: &id4}},
+func NewElectronicGamesUsecases(repository Repository[model.ElectronicGame]) *ElectronicGamesUsecases {
+	return &ElectronicGamesUsecases{
+		repository: repository,
 	}
-
-	return games, nil
 }
 
-func CreateElectronicGame(game model.ElectronicGame) (model.ElectronicGame, error) {
-	// This function would typically interact with a database or an external service
-	// to create a new electronic game. For now, we will return the game as is.
-
-	return game, nil
+func (u *ElectronicGamesUsecases) ListElectronicGames() ([]model.ElectronicGame, error) {
+	return u.repository.GetAll()
 }
 
-func UpdateElectronicGame(game model.ElectronicGame) (model.ElectronicGame, error) {
-	// This function would typically interact with a database or an external service
-	// to update an existing electronic game. For now, we will return the game as is.
-
-	return game, nil
+func (u *ElectronicGamesUsecases) CreateElectronicGame(game model.ElectronicGame) (model.ElectronicGame, error) {
+	return u.repository.Create(game)
 }
 
-func DeleteElectronicGame(id string) error {
-	// This function would typically interact with a database or an external service
-	// to delete an electronic game by its ID. For now, we will return nil to indicate success.
-
-	return nil
+func (u *ElectronicGamesUsecases) UpdateElectronicGame(game model.ElectronicGame) (model.ElectronicGame, error) {
+	return u.repository.Update(game)
 }
 
-func GetElectronicGameByID(id string) (model.ElectronicGame, error) {
-	// This function would typically interact with a database or an external service
-	// to retrieve an electronic game by its ID. For now, we will return a static game.
+func (u *ElectronicGamesUsecases) DeleteElectronicGame(id string) error {
+	return u.repository.Delete(id)
+}
 
-	game := model.ElectronicGame{
-		Media: model.Media{Title: "The Legend of Zelda: Breath of the Wild", ID: &id},
-	}
-
-	return game, nil
+func (u *ElectronicGamesUsecases) GetElectronicGameByID(id string) (model.ElectronicGame, error) {
+	return u.repository.GetByID(id)
 }

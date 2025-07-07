@@ -4,45 +4,32 @@ import (
 	"github.com/Sanmoo/go-api-lambda-boilerplate/core/model"
 )
 
-func ListNonElectronicGames() ([]model.NonElectronicGame, error) {
-	nonelectronicGames := []model.NonElectronicGame{
-		{Media: model.Media{Title: "Chess", ID: ptr("1")}},
-		{Media: model.Media{Title: "Checkers", ID: ptr("2")}},
-		{Media: model.Media{Title: "Backgammon", ID: ptr("3")}},
-		{Media: model.Media{Title: "Go", ID: ptr("4")}},
+type NonElectronicGamesUsecases struct {
+	repository Repository[model.NonElectronicGame]
+}
+
+func NewNonElectronicGamesUsecases(repository Repository[model.NonElectronicGame]) *NonElectronicGamesUsecases {
+	return &NonElectronicGamesUsecases{
+		repository: repository,
 	}
-
-	return nonelectronicGames, nil
 }
 
-func CreateNonElectronicGame(game model.NonElectronicGame) (model.NonElectronicGame, error) {
-	// This function would typically interact with a database or an external service
-	// to create a new non-electronic game. For now, we will return the game as is.
-
-	return game, nil
+func (u *NonElectronicGamesUsecases) ListNonElectronicGames() ([]model.NonElectronicGame, error) {
+	return u.repository.GetAll()
 }
 
-func UpdateNonElectronicGame(game model.NonElectronicGame) (model.NonElectronicGame, error) {
-	// This function would typically interact with a database or an external service
-	// to update an existing non-electronic game. For now, we will return the game as is.
-
-	return game, nil
+func (u *NonElectronicGamesUsecases) CreateNonElectronicGame(game model.NonElectronicGame) (model.NonElectronicGame, error) {
+	return u.repository.Create(game)
 }
 
-func DeleteNonElectronicGame(id string) error {
-	// This function would typically interact with a database or an external service
-	// to delete a non-electronic game by its ID. For now, we will return nil to indicate success.
-
-	return nil
+func (u *NonElectronicGamesUsecases) UpdateNonElectronicGame(game model.NonElectronicGame) (model.NonElectronicGame, error) {
+	return u.repository.Update(game)
 }
 
-func GetNonElectronicGameByID(id string) (model.NonElectronicGame, error) {
-	// This function would typically interact with a database or an external service
-	// to retrieve a non-electronic game by its ID. For now, we will return a static game.
+func (u *NonElectronicGamesUsecases) DeleteNonElectronicGame(id string) error {
+	return u.repository.Delete(id)
+}
 
-	game := model.NonElectronicGame{
-		Media: model.Media{Title: "Chess", ID: ptr(id)},
-	}
-
-	return game, nil
+func (u *NonElectronicGamesUsecases) GetNonElectronicGameByID(id string) (model.NonElectronicGame, error) {
+	return u.repository.GetByID(id)
 }

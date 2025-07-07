@@ -7,14 +7,21 @@ import (
 
 	_ "embed"
 
-	"github.com/Sanmoo/go-api-lambda-boilerplate/core/usecases"
+	cases "github.com/Sanmoo/go-api-lambda-boilerplate/core/usecases"
 )
 
 type BooksHandler struct {
+	usecases *cases.BooksUsecases
 }
 
-func (BooksHandler) BooksList(w http.ResponseWriter, r *http.Request, params BooksListParams) {
-	books, _ := usecases.ListBooks()
+func NewBooksHandler(usecases *cases.BooksUsecases) *BooksHandler {
+	return &BooksHandler{
+		usecases: usecases,
+	}
+}
+
+func (b *BooksHandler) BooksList(w http.ResponseWriter, r *http.Request, params BooksListParams) {
+	books, _ := b.usecases.ListBooks()
 	response := make([]Book, len(books))
 
 	for i := range books {
@@ -25,18 +32,18 @@ func (BooksHandler) BooksList(w http.ResponseWriter, r *http.Request, params Boo
 	w.Write([]byte(jsonRes))
 }
 
-func (BooksHandler) BooksCreate(w http.ResponseWriter, r *http.Request) {
+func (b *BooksHandler) BooksCreate(w http.ResponseWriter, r *http.Request) {
 	var requestBook Book
 	requestPayload, _ := io.ReadAll(r.Body)
 	json.Unmarshal(requestPayload, &requestBook)
 
-	createdBook, _ := usecases.CreateBook(*requestBook.ToModel())
+	createdBook, _ := b.usecases.CreateBook(*requestBook.ToModel())
 	jsonRes, _ := json.Marshal(BookFromModel(&createdBook))
 	w.Write([]byte(jsonRes))
 }
 
-func (BooksHandler) BooksGet(w http.ResponseWriter, r *http.Request, id string) {
-	book, err := usecases.GetBookByID(id)
+func (b *BooksHandler) BooksRead(w http.ResponseWriter, r *http.Request, id string) {
+	book, err := b.usecases.GetBookByID(id)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
@@ -51,11 +58,11 @@ func (BooksHandler) BooksGet(w http.ResponseWriter, r *http.Request, id string) 
 	})
 }
 
-func (BooksHandler) BooksUpdate(w http.ResponseWriter, r *http.Request, id string) {
+func (b *BooksHandler) BooksPut(w http.ResponseWriter, r *http.Request, id string) {
 	requestBook, _ := unmarshalFromReq[Book](r)
 	requestBook.Id = &id
 	modelBook := requestBook.ToModel()
-	updatedBook, err := usecases.UpdateBook(*modelBook)
+	updatedBook, err := b.usecases.UpdateBook(*modelBook)
 
 	respondWithJSON(responseData{
 		data:       BookFromModel(&updatedBook),
@@ -65,8 +72,8 @@ func (BooksHandler) BooksUpdate(w http.ResponseWriter, r *http.Request, id strin
 	})
 }
 
-func (BooksHandler) BooksDelete(w http.ResponseWriter, r *http.Request, id string) {
-	err := usecases.DeleteBook(id)
+func (b *BooksHandler) BooksDelete(w http.ResponseWriter, r *http.Request, id string) {
+	err := b.usecases.DeleteBook(id)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)

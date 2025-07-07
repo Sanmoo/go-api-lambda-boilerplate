@@ -8,10 +8,17 @@ import (
 )
 
 type MoviesHandler struct {
+	usecases *usecases.MoviesUsecases
 }
 
-func (MoviesHandler) MoviesList(w http.ResponseWriter, r *http.Request, params MoviesListParams) {
-	movies, _ := usecases.ListMovies()
+func NewMoviesHandler(usecases *usecases.MoviesUsecases) *MoviesHandler {
+	return &MoviesHandler{
+		usecases: usecases,
+	}
+}
+
+func (h *MoviesHandler) MoviesList(w http.ResponseWriter, r *http.Request, params MoviesListParams) {
+	movies, _ := h.usecases.ListMovies()
 	response := make([]Movie, len(movies))
 
 	for i, movie := range movies {
@@ -22,7 +29,7 @@ func (MoviesHandler) MoviesList(w http.ResponseWriter, r *http.Request, params M
 	w.Write([]byte(jsonRes))
 }
 
-func (MoviesHandler) MoviesCreate(w http.ResponseWriter, r *http.Request) {
+func (h *MoviesHandler) MoviesCreate(w http.ResponseWriter, r *http.Request) {
 	requestMovie, _ := unmarshalFromReq[Movie](r)
 	modelMovie, err := requestMovie.ToModel()
 
@@ -31,7 +38,7 @@ func (MoviesHandler) MoviesCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	createdMovie, err := usecases.CreateMovie(*modelMovie)
+	createdMovie, err := h.usecases.CreateMovie(*modelMovie)
 
 	respondWithJSON(responseData{
 		data:       MovieFromModel(&createdMovie),
@@ -41,8 +48,8 @@ func (MoviesHandler) MoviesCreate(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func (MoviesHandler) MoviesGet(w http.ResponseWriter, r *http.Request, id string) {
-	movie, err := usecases.GetMovieByID(id)
+func (h *MoviesHandler) MoviesRead(w http.ResponseWriter, r *http.Request, id string) {
+	movie, err := h.usecases.GetMovieByID(id)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
@@ -57,11 +64,11 @@ func (MoviesHandler) MoviesGet(w http.ResponseWriter, r *http.Request, id string
 	})
 }
 
-func (MoviesHandler) MoviesUpdate(w http.ResponseWriter, r *http.Request, id string) {
+func (h *MoviesHandler) MoviesPut(w http.ResponseWriter, r *http.Request, id string) {
 	requestMovie, _ := unmarshalFromReq[Movie](r)
 	requestMovie.Id = &id
-	modelMovie, err := requestMovie.ToModel()
-	updatedMovie, err := usecases.UpdateMovie(*modelMovie)
+	modelMovie, _ := requestMovie.ToModel()
+	updatedMovie, err := h.usecases.UpdateMovie(*modelMovie)
 
 	respondWithJSON(responseData{
 		data:       MovieFromModel(&updatedMovie),
@@ -71,8 +78,8 @@ func (MoviesHandler) MoviesUpdate(w http.ResponseWriter, r *http.Request, id str
 	})
 }
 
-func (MoviesHandler) MoviesDelete(w http.ResponseWriter, r *http.Request, id string) {
-	err := usecases.DeleteMovie(id)
+func (h *MoviesHandler) MoviesDelete(w http.ResponseWriter, r *http.Request, id string) {
+	err := h.usecases.DeleteMovie(id)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)

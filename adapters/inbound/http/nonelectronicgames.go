@@ -9,10 +9,17 @@ import (
 )
 
 type NonElectronicGamesHandler struct {
+	usecases *usecases.NonElectronicGamesUsecases
 }
 
-func (NonElectronicGamesHandler) NonElectronicGamesList(w http.ResponseWriter, r *http.Request, params NonElectronicGamesListParams) {
-	games, _ := usecases.ListNonElectronicGames()
+func NewNonElectronicGamesHandler(usecases *usecases.NonElectronicGamesUsecases) *NonElectronicGamesHandler {
+	return &NonElectronicGamesHandler{
+		usecases: usecases,
+	}
+}
+
+func (h *NonElectronicGamesHandler) NonElectronicGamesList(w http.ResponseWriter, r *http.Request, params NonElectronicGamesListParams) {
+	games, _ := h.usecases.ListNonElectronicGames()
 	response := make([]NonElectronicGame, len(games))
 
 	for i, game := range games {
@@ -23,20 +30,20 @@ func (NonElectronicGamesHandler) NonElectronicGamesList(w http.ResponseWriter, r
 	w.Write([]byte(jsonRes))
 }
 
-func (NonElectronicGamesHandler) NonElectronicGamesCreate(w http.ResponseWriter, r *http.Request) {
+func (h *NonElectronicGamesHandler) NonElectronicGamesCreate(w http.ResponseWriter, r *http.Request) {
 	var requestGame NonElectronicGame
 	requestPayload, _ := io.ReadAll(r.Body)
 	json.Unmarshal(requestPayload, &requestGame)
 
 	modelGame, _ := requestGame.ToModel()
 
-	createdGame, _ := usecases.CreateNonElectronicGame(*modelGame)
+	createdGame, _ := h.usecases.CreateNonElectronicGame(*modelGame)
 	jsonRes, _ := json.Marshal(NonElectronicGameFromModel(&createdGame))
 	w.Write([]byte(jsonRes))
 }
 
-func (NonElectronicGamesHandler) NonElectronicGamesGet(w http.ResponseWriter, r *http.Request, id string) {
-	game, err := usecases.GetNonElectronicGameByID(id)
+func (h *NonElectronicGamesHandler) NonElectronicGamesRead(w http.ResponseWriter, r *http.Request, id string) {
+	game, err := h.usecases.GetNonElectronicGameByID(id)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
@@ -51,7 +58,7 @@ func (NonElectronicGamesHandler) NonElectronicGamesGet(w http.ResponseWriter, r 
 	})
 }
 
-func (NonElectronicGamesHandler) NonElectronicGamesUpdate(w http.ResponseWriter, r *http.Request, id string) {
+func (h *NonElectronicGamesHandler) NonElectronicGamesPut(w http.ResponseWriter, r *http.Request, id string) {
 	requestGame, _ := unmarshalFromReq[NonElectronicGame](r)
 	requestGame.Id = &id
 	modelGame, err := requestGame.ToModel()
@@ -60,7 +67,7 @@ func (NonElectronicGamesHandler) NonElectronicGamesUpdate(w http.ResponseWriter,
 		return
 	}
 
-	updatedGame, err := usecases.UpdateNonElectronicGame(*modelGame)
+	updatedGame, err := h.usecases.UpdateNonElectronicGame(*modelGame)
 
 	respondWithJSON(responseData{
 		data:       NonElectronicGameFromModel(&updatedGame),
@@ -70,8 +77,8 @@ func (NonElectronicGamesHandler) NonElectronicGamesUpdate(w http.ResponseWriter,
 	})
 }
 
-func (NonElectronicGamesHandler) NonElectronicGamesDelete(w http.ResponseWriter, r *http.Request, id string) {
-	err := usecases.DeleteNonElectronicGame(id)
+func (h *NonElectronicGamesHandler) NonElectronicGamesDelete(w http.ResponseWriter, r *http.Request, id string) {
+	err := h.usecases.DeleteNonElectronicGame(id)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)

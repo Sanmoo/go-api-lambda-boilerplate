@@ -9,10 +9,17 @@ import (
 )
 
 type TvSeriesHandler struct {
+	usecases *usecases.TVSeriesUsecases
 }
 
-func (TvSeriesHandler) TVSeriesList(w http.ResponseWriter, r *http.Request, params TVSeriesListParams) {
-	series, _ := usecases.ListTVSeries()
+func NewTvSeriesHandler(usecases *usecases.TVSeriesUsecases) *TvSeriesHandler {
+	return &TvSeriesHandler{
+		usecases: usecases,
+	}
+}
+
+func (h *TvSeriesHandler) TVSeriesList(w http.ResponseWriter, r *http.Request, params TVSeriesListParams) {
+	series, _ := h.usecases.ListTVSeries()
 	response := make([]TVSeries, len(series))
 
 	for i, serie := range series {
@@ -23,18 +30,18 @@ func (TvSeriesHandler) TVSeriesList(w http.ResponseWriter, r *http.Request, para
 	w.Write([]byte(jsonRes))
 }
 
-func (TvSeriesHandler) TVSeriesCreate(w http.ResponseWriter, r *http.Request) {
+func (h *TvSeriesHandler) TVSeriesCreate(w http.ResponseWriter, r *http.Request) {
 	var requestTVSeries TVSeries
 	requestPayload, _ := io.ReadAll(r.Body)
 	json.Unmarshal(requestPayload, &requestTVSeries)
 
-	createdTVSeries, _ := usecases.CreateTVSeries(*requestTVSeries.ToModel())
+	createdTVSeries, _ := h.usecases.CreateTVSeries(*requestTVSeries.ToModel())
 	jsonRes, _ := json.Marshal(TVSeriesFromModel(&createdTVSeries))
 	w.Write([]byte(jsonRes))
 }
 
-func (TvSeriesHandler) TVSeriesGet(w http.ResponseWriter, r *http.Request, id string) {
-	tvSeries, err := usecases.GetTVSeriesByID(id)
+func (h *TvSeriesHandler) TVSeriesRead(w http.ResponseWriter, r *http.Request, id string) {
+	tvSeries, err := h.usecases.GetTVSeriesByID(id)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
@@ -49,11 +56,11 @@ func (TvSeriesHandler) TVSeriesGet(w http.ResponseWriter, r *http.Request, id st
 	})
 }
 
-func (TvSeriesHandler) TVSeriesUpdate(w http.ResponseWriter, r *http.Request, id string) {
+func (h *TvSeriesHandler) TVSeriesPut(w http.ResponseWriter, r *http.Request, id string) {
 	requestTVSeries, _ := unmarshalFromReq[TVSeries](r)
 	requestTVSeries.Id = &id
 	modelTVSeries := requestTVSeries.ToModel()
-	updatedTVSeries, err := usecases.UpdateTVSeries(*modelTVSeries)
+	updatedTVSeries, err := h.usecases.UpdateTVSeries(*modelTVSeries)
 
 	respondWithJSON(responseData{
 		data:       TVSeriesFromModel(&updatedTVSeries),
@@ -63,8 +70,8 @@ func (TvSeriesHandler) TVSeriesUpdate(w http.ResponseWriter, r *http.Request, id
 	})
 }
 
-func (TvSeriesHandler) TVSeriesDelete(w http.ResponseWriter, r *http.Request, id string) {
-	err := usecases.DeleteTVSeries(id)
+func (h *TvSeriesHandler) TVSeriesDelete(w http.ResponseWriter, r *http.Request, id string) {
+	err := h.usecases.DeleteTVSeries(id)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)

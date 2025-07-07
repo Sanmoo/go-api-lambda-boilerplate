@@ -9,10 +9,17 @@ import (
 )
 
 type ElectronicGamesHandler struct {
+	usecases *usecases.ElectronicGamesUsecases
 }
 
-func (ElectronicGamesHandler) ElectronicGamesList(w http.ResponseWriter, r *http.Request, params ElectronicGamesListParams) {
-	games, _ := usecases.ListElectronicGames()
+func NewElectronicGamesHandler(usecases *usecases.ElectronicGamesUsecases) *ElectronicGamesHandler {
+	return &ElectronicGamesHandler{
+		usecases: usecases,
+	}
+}
+
+func (b *ElectronicGamesHandler) ElectronicGamesList(w http.ResponseWriter, r *http.Request, params ElectronicGamesListParams) {
+	games, _ := b.usecases.ListElectronicGames()
 	response := make([]ElectronicGame, len(games))
 
 	for i, game := range games {
@@ -23,7 +30,7 @@ func (ElectronicGamesHandler) ElectronicGamesList(w http.ResponseWriter, r *http
 	w.Write([]byte(jsonRes))
 }
 
-func (ElectronicGamesHandler) ElectronicGamesCreate(w http.ResponseWriter, r *http.Request) {
+func (b *ElectronicGamesHandler) ElectronicGamesCreate(w http.ResponseWriter, r *http.Request) {
 	var requestGame ElectronicGame
 	requestPayload, _ := io.ReadAll(r.Body)
 	json.Unmarshal(requestPayload, &requestGame)
@@ -34,13 +41,13 @@ func (ElectronicGamesHandler) ElectronicGamesCreate(w http.ResponseWriter, r *ht
 		return
 	}
 
-	createdGame, _ := usecases.CreateElectronicGame(*modelGame)
+	createdGame, _ := b.usecases.CreateElectronicGame(*modelGame)
 	jsonRes, _ := json.Marshal(ElectronicGameFromModel(&createdGame))
 	w.Write([]byte(jsonRes))
 }
 
-func (ElectronicGamesHandler) ElectronicGamesGet(w http.ResponseWriter, r *http.Request, id string) {
-	game, err := usecases.GetElectronicGameByID(id)
+func (b *ElectronicGamesHandler) ElectronicGamesRead(w http.ResponseWriter, r *http.Request, id string) {
+	game, err := b.usecases.GetElectronicGameByID(id)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
@@ -55,11 +62,11 @@ func (ElectronicGamesHandler) ElectronicGamesGet(w http.ResponseWriter, r *http.
 	})
 }
 
-func (ElectronicGamesHandler) ElectronicGamesUpdate(w http.ResponseWriter, r *http.Request, id string) {
+func (b *ElectronicGamesHandler) ElectronicGamesPut(w http.ResponseWriter, r *http.Request, id string) {
 	requestGame, _ := unmarshalFromReq[ElectronicGame](r)
 	requestGame.Id = &id
 	modelGame, _ := requestGame.ToModel()
-	updatedGame, err := usecases.UpdateElectronicGame(*modelGame)
+	updatedGame, err := b.usecases.UpdateElectronicGame(*modelGame)
 
 	respondWithJSON(responseData{
 		data:       ElectronicGameFromModel(&updatedGame),
@@ -69,8 +76,8 @@ func (ElectronicGamesHandler) ElectronicGamesUpdate(w http.ResponseWriter, r *ht
 	})
 }
 
-func (ElectronicGamesHandler) ElectronicGamesDelete(w http.ResponseWriter, r *http.Request, id string) {
-	err := usecases.DeleteElectronicGame(id)
+func (b *ElectronicGamesHandler) ElectronicGamesDelete(w http.ResponseWriter, r *http.Request, id string) {
+	err := b.usecases.DeleteElectronicGame(id)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)

@@ -1,6 +1,6 @@
 github.com/RaveNoX/go-jsoncommentstrip v1.0.0/go.mod h1:78ihd09MekBnJnxpICcwzCMzGrKSKYe4AqU6PDYYpjk=
-github.com/Sanmoo/go-api-lambda-boilerplate/core v0.0.0-20250628120149-1dc9e5f4ee3b h1:BkelJyY4de2t1nMTzULZyQ77MPIcu99wIqT6ICB9GNU=
-github.com/Sanmoo/go-api-lambda-boilerplate/core v0.0.0-20250628120149-1dc9e5f4ee3b/go.mod h1:BF2Z1M9bY3MGkh+SeyrQNmHkeJP6grcjnow1P1nOM+Y=
+github.com/Sanmoo/go-api-lambda-boilerplate/core v0.0.0-20250707113144-95d55d3dfdff h1:vtC3aolnR5HZzWS2luHf+3vswbMAzeRtSMjOGCQcRgQ=
+github.com/Sanmoo/go-api-lambda-boilerplate/core v0.0.0-20250707113144-95d55d3dfdff/go.mod h1:BF2Z1M9bY3MGkh+SeyrQNmHkeJP6grcjnow1P1nOM+Y=
 github.com/akrylysov/algnhsa v1.1.0 h1:G0SoP16tMRyiism7VNc3JFA0wq/cVgEkp/ExMVnc6PQ=
 github.com/akrylysov/algnhsa v1.1.0/go.mod h1:+bOweRs/WBu5awl+ifCoSYAuKVPAmoTk8XOMrZ1xwiw=
 github.com/apapsch/go-jsonmerge/v2 v2.0.0 h1:axGnT1gRIfimI7gJifB699GoE/oq+F2MU7Dml6nw9rQ=
