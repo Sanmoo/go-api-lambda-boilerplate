@@ -27,8 +27,8 @@ output "media_tracker_authorizer_id" {
   value = aws_apigatewayv2_authorizer.media_tracker_authorizer.id
 }
 
-resource "aws_apigatewayv2_stage" "media_tracker_stage" {
+resource "aws_apigatewayv2_stage" "default" {
   api_id = aws_apigatewayv2_api.media_tracker_api.id
-  name   = "default"
+  name   = "$default"
   auto_deploy = true
 }

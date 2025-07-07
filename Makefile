@@ -30,8 +30,11 @@ adapters/inbound/aws/infra/artifacts/%.zip: adapters/inbound/aws/%/bootstrap
 	cd adapters/inbound/aws/$* && zip $*.zip bootstrap
 	mkdir -p adapters/inbound/aws/infra/artifacts
 	mv adapters/inbound/aws/$*/$*.zip adapters/inbound/aws/infra/artifacts
+	
+HTTP_SRCS := $(shell find adapters/inbound/http -name "*.go")
+AWS_COMMON_SRCS := $(shell find adapters/inbound/aws -name "*.go" ! -name "lambda.go")
 
-adapters/inbound/aws/%/bootstrap: adapters/inbound/aws/%/lambda.go adapters/inbound/http/gen.go adapters/inbound/aws/common.go
+adapters/inbound/aws/%/bootstrap: adapters/inbound/aws/%/lambda.go $(HTTP_SRCS) $(AWS_COMMON_SRCS)
 	cd adapters/inbound/aws/$* && GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bootstrap lambda.go
 	
 # Deployment tasks
@@ -39,13 +42,13 @@ terraform-init:
 	cd infra && terraform init
 	cd adapters/inbound/aws/infra && terraform init
 
-plan-infra-deployment:
+plan-infra:
 	cd infra && terraform plan -out=plan
 
 deploy-infra:
 	cd infra && terraform apply plan
 
-plan: lambdas
+plan:
 	cd adapters/inbound/aws/infra && terraform plan -out=plan
 	
 make plan-destroy:

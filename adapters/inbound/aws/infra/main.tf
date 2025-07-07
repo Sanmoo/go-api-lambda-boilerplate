@@ -40,6 +40,20 @@ resource "aws_lambda_function" "lambda" {
   source_code_hash = filesha256("${path.module}/../${each.key}/bootstrap")
 
   runtime = "provided.al2"
+  
+  logging_config {
+    log_format = "JSON"
+    application_log_level = "DEBUG"
+    system_log_level = "DEBUG"
+  }
+  
+  depends_on = [ aws_cloudwatch_log_group.lambda_log_group ]
+}
+
+resource "aws_cloudwatch_log_group" "lambda_log_group" {
+  for_each = local.lambdas
+  name     = "/aws/lambda/media-tracker-${each.key}-dev"
+  retention_in_days = 3
 }
 
 resource "aws_apigatewayv2_integration" "lambda_integration" {
