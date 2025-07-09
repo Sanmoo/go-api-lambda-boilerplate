@@ -36,6 +36,10 @@ AWS_COMMON_SRCS := $(shell find adapters/inbound/aws -name "*.go" ! -name "lambd
 
 adapters/inbound/aws/%/bootstrap: adapters/inbound/aws/%/lambda.go $(HTTP_SRCS) $(AWS_COMMON_SRCS)
 	cd adapters/inbound/aws/$* && GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bootstrap lambda.go
+
+# Test Tasks
+test:
+	go generate ./core/mocks
 	
 # Deployment tasks
 terraform-init:
