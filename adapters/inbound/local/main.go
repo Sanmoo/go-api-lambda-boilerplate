@@ -11,10 +11,6 @@ import (
 	middleware "github.com/oapi-codegen/nethttp-middleware"
 )
 
-type LocalBaseHandler struct {
-	adpt.BlankHandler
-}
-
 type LocalHandler struct {
 	adpt.BooksHandler
 	adpt.MoviesHandler

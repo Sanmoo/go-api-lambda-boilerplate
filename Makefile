@@ -70,16 +70,21 @@ deps:
 	go install github.com/vladopajic/go-test-coverage/v2@latest
 
 .PHONY: test
-test: core/cover.out
+test: core/cover.out adapters/inbound/http/cover.out
 
 core/cover.out: $(CORE_SRCS)
 	go generate ./core/mocks
 	cd core && go test ./... -coverprofile=./cover.out.tmp -covermode=atomic -coverpkg=./...
 	cd core && cat ./cover.out.tmp | grep -v "_generated.go" > ./cover.out
+
+adapters/inbound/http/cover.out: $(HTTP_SRCS)
+	cd adapters/inbound/http && \
+		go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./...
 	
 .PHONY: check-coverage
-check-coverage: core/cover.out
+check-coverage: core/cover.out adapters/inbound/http/cover.out
 	cd core && go tool cover -html=cover.out -o cover.html
+	cd adapters/inbound/http && go tool cover -html=cover.out -o cover.html
 	go-test-coverage --config=./.testcoverage.yaml
 	
 # Tasks for CI Server
