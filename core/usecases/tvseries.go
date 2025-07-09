@@ -14,22 +14,22 @@ func NewTVSeriesUsecases(repository Repository[model.TVSeries]) *TVSeriesUsecase
 	}
 }
 
-func (u *TVSeriesUsecases) ListTVSeries() ([]model.TVSeries, error) {
+func (u *TVSeriesUsecases) List() ([]model.TVSeries, error) {
 	return u.repository.GetAll()
 }
 
-func (u *TVSeriesUsecases) CreateTVSeries(tvSeries model.TVSeries) (model.TVSeries, error) {
+func (u *TVSeriesUsecases) Create(tvSeries model.TVSeries) (model.TVSeries, error) {
 	return u.repository.Create(tvSeries)
 }
 
-func (u *TVSeriesUsecases) UpdateTVSeries(tvSeries model.TVSeries) (model.TVSeries, error) {
+func (u *TVSeriesUsecases) Update(tvSeries model.TVSeries) (model.TVSeries, error) {
 	return u.repository.Update(tvSeries)
 }
 
-func (u *TVSeriesUsecases) DeleteTVSeries(id string) error {
+func (u *TVSeriesUsecases) Delete(id string) error {
 	return u.repository.Delete(id)
 }
 
-func (u *TVSeriesUsecases) GetTVSeriesByID(id string) (model.TVSeries, error) {
+func (u *TVSeriesUsecases) GetByID(id string) (model.TVSeries, error) {
 	return u.repository.GetByID(id)
 }

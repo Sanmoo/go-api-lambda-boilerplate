@@ -5,11 +5,12 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/Sanmoo/go-api-lambda-boilerplate/core/model"
 	"github.com/Sanmoo/go-api-lambda-boilerplate/core/usecases"
 )
 
 type NonElectronicGamesHandler struct {
-	usecases *usecases.NonElectronicGamesUsecases
+	usecases GenericUseCase[model.NonElectronicGame]
 }
 
 func NewNonElectronicGamesHandler(usecases *usecases.NonElectronicGamesUsecases) *NonElectronicGamesHandler {
@@ -19,7 +20,7 @@ func NewNonElectronicGamesHandler(usecases *usecases.NonElectronicGamesUsecases)
 }
 
 func (h *NonElectronicGamesHandler) NonElectronicGamesList(w http.ResponseWriter, r *http.Request, params NonElectronicGamesListParams) {
-	games, _ := h.usecases.ListNonElectronicGames()
+	games, _ := h.usecases.List()
 	response := make([]NonElectronicGame, len(games))
 
 	for i, game := range games {
@@ -37,13 +38,13 @@ func (h *NonElectronicGamesHandler) NonElectronicGamesCreate(w http.ResponseWrit
 
 	modelGame, _ := requestGame.ToModel()
 
-	createdGame, _ := h.usecases.CreateNonElectronicGame(*modelGame)
+	createdGame, _ := h.usecases.Create(*modelGame)
 	jsonRes, _ := json.Marshal(NonElectronicGameFromModel(&createdGame))
 	w.Write([]byte(jsonRes))
 }
 
 func (h *NonElectronicGamesHandler) NonElectronicGamesRead(w http.ResponseWriter, r *http.Request, id string) {
-	game, err := h.usecases.GetNonElectronicGameByID(id)
+	game, err := h.usecases.GetByID(id)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
@@ -67,7 +68,7 @@ func (h *NonElectronicGamesHandler) NonElectronicGamesPut(w http.ResponseWriter,
 		return
 	}
 
-	updatedGame, err := h.usecases.UpdateNonElectronicGame(*modelGame)
+	updatedGame, err := h.usecases.Update(*modelGame)
 
 	respondWithJSON(responseData{
 		data:       NonElectronicGameFromModel(&updatedGame),
@@ -78,7 +79,7 @@ func (h *NonElectronicGamesHandler) NonElectronicGamesPut(w http.ResponseWriter,
 }
 
 func (h *NonElectronicGamesHandler) NonElectronicGamesDelete(w http.ResponseWriter, r *http.Request, id string) {
-	err := h.usecases.DeleteNonElectronicGame(id)
+	err := h.usecases.Delete(id)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)

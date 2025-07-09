@@ -6,23 +6,21 @@ import (
 	"net/http"
 
 	_ "embed"
-
-	"github.com/Sanmoo/go-api-lambda-boilerplate/core/model"
 )
 
-type BooksHandler struct {
-	usecases GenericUseCase[model.Book]
+type GenericHandler[T any] struct {
+	usecases GenericUseCase[T]
 }
 
-func NewBooksHandler(usecases GenericUseCase[model.Book]) *BooksHandler {
-	return &BooksHandler{
+func NewGenericHandler[T any](usecases GenericUseCase[T]) *GenericHandler[T] {
+	return &GenericHandler[T]{
 		usecases: usecases,
 	}
 }
 
-func (b *BooksHandler) BooksList(w http.ResponseWriter, r *http.Request, params BooksListParams) {
-	books, _ := b.usecases.List()
-	response := make([]Book, len(books))
+func (h *GenericHandler[T]) BooksList(w http.ResponseWriter, r *http.Request, params BooksListParams) {
+	books, _ := h.usecases.List()
+	response := make([]T, len(books))
 
 	for i := range books {
 		response[i] = *BookFromModel(&books[i])
@@ -32,18 +30,18 @@ func (b *BooksHandler) BooksList(w http.ResponseWriter, r *http.Request, params 
 	w.Write([]byte(jsonRes))
 }
 
-func (b *BooksHandler) BooksCreate(w http.ResponseWriter, r *http.Request) {
+func (h *GenericHandler) BooksCreate(w http.ResponseWriter, r *http.Request) {
 	var requestBook Book
 	requestPayload, _ := io.ReadAll(r.Body)
 	json.Unmarshal(requestPayload, &requestBook)
 
-	createdBook, _ := b.usecases.Create(*requestBook.ToModel())
+	createdBook, _ := h.usecases.Create(*requestBook.ToModel())
 	jsonRes, _ := json.Marshal(BookFromModel(&createdBook))
 	w.Write([]byte(jsonRes))
 }
 
-func (b *BooksHandler) BooksRead(w http.ResponseWriter, r *http.Request, id string) {
-	book, err := b.usecases.GetByID(id)
+func (h *GenericHandler) BooksRead(w http.ResponseWriter, r *http.Request, id string) {
+	book, err := h.usecases.GetByID(id)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
@@ -58,11 +56,11 @@ func (b *BooksHandler) BooksRead(w http.ResponseWriter, r *http.Request, id stri
 	})
 }
 
-func (b *BooksHandler) BooksPut(w http.ResponseWriter, r *http.Request, id string) {
+func (h *GenericHandler) BooksPut(w http.ResponseWriter, r *http.Request, id string) {
 	requestBook, _ := unmarshalFromReq[Book](r)
 	requestBook.Id = &id
 	modelBook := requestBook.ToModel()
-	updatedBook, err := b.usecases.Update(*modelBook)
+	updatedBook, err := h.usecases.Update(*modelBook)
 
 	respondWithJSON(responseData{
 		data:       BookFromModel(&updatedBook),
@@ -72,8 +70,8 @@ func (b *BooksHandler) BooksPut(w http.ResponseWriter, r *http.Request, id strin
 	})
 }
 
-func (b *BooksHandler) BooksDelete(w http.ResponseWriter, r *http.Request, id string) {
-	err := b.usecases.Delete(id)
+func (h *GenericHandler) BooksDelete(w http.ResponseWriter, r *http.Request, id string) {
+	err := h.usecases.Delete(id)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)

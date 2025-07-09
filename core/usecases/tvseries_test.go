@@ -35,7 +35,7 @@ func TestCreatesATVSeries(t *testing.T) {
 		Times(1)
 
 	// Act
-	created, err := sut.CreateTVSeries(tvSeries)
+	created, err := sut.Create(tvSeries)
 
 	// Assert
 	if err != nil {
@@ -57,7 +57,7 @@ func TestUpdatesATVSeries(t *testing.T) {
 		Times(1)
 
 	// Act
-	updated, err := sut.UpdateTVSeries(tvSeries)
+	updated, err := sut.Update(tvSeries)
 
 	// Assert
 	if err != nil {
@@ -79,7 +79,7 @@ func TestListTVSeries(t *testing.T) {
 		Times(1)
 
 	// Act
-	list, err := sut.ListTVSeries()
+	list, err := sut.List()
 
 	// Assert
 	if err != nil {
@@ -101,7 +101,7 @@ func TestDeleteTVSeries(t *testing.T) {
 		Times(1)
 
 	// Act
-	err := sut.DeleteTVSeries(*tvSeries.ID)
+	err := sut.Delete(*tvSeries.ID)
 
 	// Assert
 	if err != nil {
@@ -119,7 +119,7 @@ func TestGetTVSeriesByID(t *testing.T) {
 		Times(1)
 
 	// Act
-	foundTVSeries, err := sut.GetTVSeriesByID(*tvSeries.ID)
+	foundTVSeries, err := sut.GetByID(*tvSeries.ID)
 
 	// Assert
 	if err != nil {

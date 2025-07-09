@@ -35,7 +35,7 @@ func TestCreatesAMovie(t *testing.T) {
 		Times(1)
 
 	// Act
-	created, err := sut.CreateMovie(movie)
+	created, err := sut.Create(movie)
 
 	// Assert
 	if err != nil {
@@ -57,7 +57,7 @@ func TestUpdatesAMovie(t *testing.T) {
 		Times(1)
 
 	// Act
-	updated, err := sut.UpdateMovie(movie)
+	updated, err := sut.Update(movie)
 
 	// Assert
 	if err != nil {
@@ -79,7 +79,7 @@ func TestListMovies(t *testing.T) {
 		Times(1)
 
 	// Act
-	list, err := sut.ListMovies()
+	list, err := sut.List()
 
 	// Assert
 	if err != nil {
@@ -101,7 +101,7 @@ func TestDeleteMovie(t *testing.T) {
 		Times(1)
 
 	// Act
-	err := sut.DeleteMovie(*movie.ID)
+	err := sut.Delete(*movie.ID)
 
 	// Assert
 	if err != nil {
@@ -119,7 +119,7 @@ func TestGetMovieByID(t *testing.T) {
 		Times(1)
 
 	// Act
-	foundMovie, err := sut.GetMovieByID(*movie.ID)
+	foundMovie, err := sut.GetByID(*movie.ID)
 
 	// Assert
 	if err != nil {

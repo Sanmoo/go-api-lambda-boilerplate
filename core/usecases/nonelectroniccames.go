@@ -14,22 +14,22 @@ func NewNonElectronicGamesUsecases(repository Repository[model.NonElectronicGame
 	}
 }
 
-func (u *NonElectronicGamesUsecases) ListNonElectronicGames() ([]model.NonElectronicGame, error) {
+func (u *NonElectronicGamesUsecases) List() ([]model.NonElectronicGame, error) {
 	return u.repository.GetAll()
 }
 
-func (u *NonElectronicGamesUsecases) CreateNonElectronicGame(game model.NonElectronicGame) (model.NonElectronicGame, error) {
+func (u *NonElectronicGamesUsecases) Create(game model.NonElectronicGame) (model.NonElectronicGame, error) {
 	return u.repository.Create(game)
 }
 
-func (u *NonElectronicGamesUsecases) UpdateNonElectronicGame(game model.NonElectronicGame) (model.NonElectronicGame, error) {
+func (u *NonElectronicGamesUsecases) Update(game model.NonElectronicGame) (model.NonElectronicGame, error) {
 	return u.repository.Update(game)
 }
 
-func (u *NonElectronicGamesUsecases) DeleteNonElectronicGame(id string) error {
+func (u *NonElectronicGamesUsecases) Delete(id string) error {
 	return u.repository.Delete(id)
 }
 
-func (u *NonElectronicGamesUsecases) GetNonElectronicGameByID(id string) (model.NonElectronicGame, error) {
+func (u *NonElectronicGamesUsecases) GetByID(id string) (model.NonElectronicGame, error) {
 	return u.repository.GetByID(id)
 }

@@ -14,22 +14,22 @@ func NewElectronicGamesUsecases(repository Repository[model.ElectronicGame]) *El
 	}
 }
 
-func (u *ElectronicGamesUsecases) ListElectronicGames() ([]model.ElectronicGame, error) {
+func (u *ElectronicGamesUsecases) List() ([]model.ElectronicGame, error) {
 	return u.repository.GetAll()
 }
 
-func (u *ElectronicGamesUsecases) CreateElectronicGame(game model.ElectronicGame) (model.ElectronicGame, error) {
+func (u *ElectronicGamesUsecases) Create(game model.ElectronicGame) (model.ElectronicGame, error) {
 	return u.repository.Create(game)
 }
 
-func (u *ElectronicGamesUsecases) UpdateElectronicGame(game model.ElectronicGame) (model.ElectronicGame, error) {
+func (u *ElectronicGamesUsecases) Update(game model.ElectronicGame) (model.ElectronicGame, error) {
 	return u.repository.Update(game)
 }
 
-func (u *ElectronicGamesUsecases) DeleteElectronicGame(id string) error {
+func (u *ElectronicGamesUsecases) Delete(id string) error {
 	return u.repository.Delete(id)
 }
 
-func (u *ElectronicGamesUsecases) GetElectronicGameByID(id string) (model.ElectronicGame, error) {
+func (u *ElectronicGamesUsecases) GetByID(id string) (model.ElectronicGame, error) {
 	return u.repository.GetByID(id)
 }

@@ -4,11 +4,12 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/Sanmoo/go-api-lambda-boilerplate/core/model"
 	"github.com/Sanmoo/go-api-lambda-boilerplate/core/usecases"
 )
 
 type MoviesHandler struct {
-	usecases *usecases.MoviesUsecases
+	usecases GenericUseCase[model.Movie]
 }
 
 func NewMoviesHandler(usecases *usecases.MoviesUsecases) *MoviesHandler {
@@ -18,7 +19,7 @@ func NewMoviesHandler(usecases *usecases.MoviesUsecases) *MoviesHandler {
 }
 
 func (h *MoviesHandler) MoviesList(w http.ResponseWriter, r *http.Request, params MoviesListParams) {
-	movies, _ := h.usecases.ListMovies()
+	movies, _ := h.usecases.List()
 	response := make([]Movie, len(movies))
 
 	for i, movie := range movies {
@@ -38,7 +39,7 @@ func (h *MoviesHandler) MoviesCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	createdMovie, err := h.usecases.CreateMovie(*modelMovie)
+	createdMovie, err := h.usecases.Create(*modelMovie)
 
 	respondWithJSON(responseData{
 		data:       MovieFromModel(&createdMovie),
@@ -49,7 +50,7 @@ func (h *MoviesHandler) MoviesCreate(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *MoviesHandler) MoviesRead(w http.ResponseWriter, r *http.Request, id string) {
-	movie, err := h.usecases.GetMovieByID(id)
+	movie, err := h.usecases.GetByID(id)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
@@ -68,7 +69,7 @@ func (h *MoviesHandler) MoviesPut(w http.ResponseWriter, r *http.Request, id str
 	requestMovie, _ := unmarshalFromReq[Movie](r)
 	requestMovie.Id = &id
 	modelMovie, _ := requestMovie.ToModel()
-	updatedMovie, err := h.usecases.UpdateMovie(*modelMovie)
+	updatedMovie, err := h.usecases.Update(*modelMovie)
 
 	respondWithJSON(responseData{
 		data:       MovieFromModel(&updatedMovie),
@@ -79,7 +80,7 @@ func (h *MoviesHandler) MoviesPut(w http.ResponseWriter, r *http.Request, id str
 }
 
 func (h *MoviesHandler) MoviesDelete(w http.ResponseWriter, r *http.Request, id string) {
-	err := h.usecases.DeleteMovie(id)
+	err := h.usecases.Delete(id)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)

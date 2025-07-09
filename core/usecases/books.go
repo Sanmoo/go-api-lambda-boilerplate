@@ -14,23 +14,23 @@ func NewBooksUsecases(repository Repository[model.Book]) *BooksUsecases {
 	}
 }
 
-func (b *BooksUsecases) ListBooks() ([]model.Book, error) {
+func (b *BooksUsecases) List() ([]model.Book, error) {
 	bs, _ := b.repository.GetAll()
 	return bs, nil
 }
 
-func (b *BooksUsecases) CreateBook(book model.Book) (model.Book, error) {
+func (b *BooksUsecases) Create(book model.Book) (model.Book, error) {
 	return b.repository.Create(book)
 }
 
-func (b *BooksUsecases) UpdateBook(book model.Book) (model.Book, error) {
+func (b *BooksUsecases) Update(book model.Book) (model.Book, error) {
 	return b.repository.Update(book)
 }
 
-func (b *BooksUsecases) DeleteBook(id string) error {
+func (b *BooksUsecases) Delete(id string) error {
 	return b.repository.Delete(id)
 }
 
-func (b *BooksUsecases) GetBookByID(id string) (model.Book, error) {
+func (b *BooksUsecases) GetByID(id string) (model.Book, error) {
 	return b.repository.GetByID(id)
 }

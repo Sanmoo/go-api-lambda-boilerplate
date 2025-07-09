@@ -78,6 +78,7 @@ core/cover.out: $(CORE_SRCS)
 	cd core && cat ./cover.out.tmp | grep -v "_generated.go" > ./cover.out
 
 adapters/inbound/http/cover.out: $(HTTP_SRCS)
+	go generate ./adapters/inbound/http/testhelpers/mocks
 	cd adapters/inbound/http && \
 		go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./...
 	
@@ -86,13 +87,18 @@ check-coverage: core/cover.out adapters/inbound/http/cover.out
 	cd core && go tool cover -html=cover.out -o cover.html
 	cd adapters/inbound/http && go tool cover -html=cover.out -o cover.html
 	go-test-coverage --config=./.testcoverage.yaml
-	
+
 # Tasks for CI Server
 .PHONY: check-coverage-ci
 check-coverage-ci: core/cover.out
 	go-test-coverage --config=./.testcoverage.yaml
 	
 # Cleanup Tasks
+.PHONY: clean-tests
+clean-tests:
+	rm -rf core/cover.out
+	rm -rf adapters/inbound/http/cover.out
+	
 .PHONY: clean-lambdas
 clean-lambdas:
 	rm -rf lambdas/books/bootstrap

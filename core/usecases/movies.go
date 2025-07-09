@@ -14,22 +14,22 @@ func NewMoviesUsecases(repository Repository[model.Movie]) *MoviesUsecases {
 	}
 }
 
-func (u *MoviesUsecases) ListMovies() ([]model.Movie, error) {
+func (u *MoviesUsecases) List() ([]model.Movie, error) {
 	return u.repository.GetAll()
 }
 
-func (u *MoviesUsecases) CreateMovie(movie model.Movie) (model.Movie, error) {
+func (u *MoviesUsecases) Create(movie model.Movie) (model.Movie, error) {
 	return u.repository.Create(movie)
 }
 
-func (u *MoviesUsecases) UpdateMovie(movie model.Movie) (model.Movie, error) {
+func (u *MoviesUsecases) Update(movie model.Movie) (model.Movie, error) {
 	return u.repository.Update(movie)
 }
 
-func (u *MoviesUsecases) DeleteMovie(id string) error {
+func (u *MoviesUsecases) Delete(id string) error {
 	return u.repository.Delete(id)
 }
 
-func (u *MoviesUsecases) GetMovieByID(id string) (model.Movie, error) {
+func (u *MoviesUsecases) GetByID(id string) (model.Movie, error) {
 	return u.repository.GetByID(id)
 }

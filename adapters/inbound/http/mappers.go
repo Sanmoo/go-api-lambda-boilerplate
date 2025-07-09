@@ -19,6 +19,34 @@ func (b *Book) ToModel() *model.Book {
 	}
 }
 
+type Entity interface {
+	model.Book | model.ElectronicGame | model.NonElectronicGame | model.Movie | model.TVSeries
+}
+
+type Dto interface {
+	Book | ElectronicGame | NonElectronicGame | Movie | TVSeries
+}
+
+func FromModel[E model.Book, O Book](entity *E) O {
+}
+
+// func FromModel[E Entity, O Dto](entity *E) O {
+// 	switch v := any(entity).(type) {
+// 	case model.Book:
+// 		return *O(*BookFromModel(entity))
+// 	case model.ElectronicGame:
+// 		return ElectronicGameFromModel(v)
+// 	case model.NonElectronicGame:
+// 		return NonElectronicGameFromModel(v)
+// 	case model.Movie:
+// 		return MovieFromModel(v)
+// 	case model.TVSeries:
+// 		return TVSeriesFromModel(v)
+// 	default:
+// 		return nil
+// 	}
+// }
+
 func BookFromModel(book *model.Book) *Book {
 	return &Book{
 		Id:     book.ID,

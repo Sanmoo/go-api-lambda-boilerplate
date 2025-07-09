@@ -35,7 +35,7 @@ func TestCreatesABook(t *testing.T) {
 		Times(1)
 
 	// Act
-	created, err := sut.CreateBook(book)
+	created, err := sut.Create(book)
 
 	// Assert
 	if err != nil {
@@ -57,7 +57,7 @@ func TestUpdatesABook(t *testing.T) {
 		Times(1)
 
 	// Act
-	updated, err := sut.UpdateBook(book)
+	updated, err := sut.Update(book)
 
 	// Assert
 	if err != nil {
@@ -79,7 +79,7 @@ func TestListBooks(t *testing.T) {
 		Times(1)
 
 	// Act
-	list, err := sut.ListBooks()
+	list, err := sut.List()
 
 	// Assert
 	if err != nil {
@@ -101,7 +101,7 @@ func TestDeleteBook(t *testing.T) {
 		Times(1)
 
 	// Act
-	err := sut.DeleteBook(*book.ID)
+	err := sut.Delete(*book.ID)
 
 	// Assert
 	if err != nil {
@@ -119,7 +119,7 @@ func TestGetBookByID(t *testing.T) {
 		Times(1)
 
 	// Act
-	foundBook, err := sut.GetBookByID(*book.ID)
+	foundBook, err := sut.GetByID(*book.ID)
 
 	// Assert
 	if err != nil {

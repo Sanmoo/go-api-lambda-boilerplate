@@ -5,21 +5,22 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/Sanmoo/go-api-lambda-boilerplate/core/model"
 	"github.com/Sanmoo/go-api-lambda-boilerplate/core/usecases"
 )
 
 type TvSeriesHandler struct {
-	usecases *usecases.TVSeriesUsecases
+	uc GenericUseCase[model.TVSeries]
 }
 
-func NewTvSeriesHandler(usecases *usecases.TVSeriesUsecases) *TvSeriesHandler {
+func NewTvSeriesHandler(uc *usecases.TVSeriesUsecases) *TvSeriesHandler {
 	return &TvSeriesHandler{
-		usecases: usecases,
+		uc: uc,
 	}
 }
 
 func (h *TvSeriesHandler) TVSeriesList(w http.ResponseWriter, r *http.Request, params TVSeriesListParams) {
-	series, _ := h.usecases.ListTVSeries()
+	series, _ := h.uc.List()
 	response := make([]TVSeries, len(series))
 
 	for i, serie := range series {
@@ -35,13 +36,13 @@ func (h *TvSeriesHandler) TVSeriesCreate(w http.ResponseWriter, r *http.Request)
 	requestPayload, _ := io.ReadAll(r.Body)
 	json.Unmarshal(requestPayload, &requestTVSeries)
 
-	createdTVSeries, _ := h.usecases.CreateTVSeries(*requestTVSeries.ToModel())
+	createdTVSeries, _ := h.uc.Create(*requestTVSeries.ToModel())
 	jsonRes, _ := json.Marshal(TVSeriesFromModel(&createdTVSeries))
 	w.Write([]byte(jsonRes))
 }
 
 func (h *TvSeriesHandler) TVSeriesRead(w http.ResponseWriter, r *http.Request, id string) {
-	tvSeries, err := h.usecases.GetTVSeriesByID(id)
+	tvSeries, err := h.uc.GetByID(id)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
@@ -60,7 +61,7 @@ func (h *TvSeriesHandler) TVSeriesPut(w http.ResponseWriter, r *http.Request, id
 	requestTVSeries, _ := unmarshalFromReq[TVSeries](r)
 	requestTVSeries.Id = &id
 	modelTVSeries := requestTVSeries.ToModel()
-	updatedTVSeries, err := h.usecases.UpdateTVSeries(*modelTVSeries)
+	updatedTVSeries, err := h.uc.Update(*modelTVSeries)
 
 	respondWithJSON(responseData{
 		data:       TVSeriesFromModel(&updatedTVSeries),
@@ -71,7 +72,7 @@ func (h *TvSeriesHandler) TVSeriesPut(w http.ResponseWriter, r *http.Request, id
 }
 
 func (h *TvSeriesHandler) TVSeriesDelete(w http.ResponseWriter, r *http.Request, id string) {
-	err := h.usecases.DeleteTVSeries(id)
+	err := h.uc.Delete(id)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)

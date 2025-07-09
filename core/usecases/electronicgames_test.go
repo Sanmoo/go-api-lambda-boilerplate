@@ -35,7 +35,7 @@ func TestCreatesAElectronicGame(t *testing.T) {
 		Times(1)
 
 	// Act
-	created, err := sut.CreateElectronicGame(game)
+	created, err := sut.Create(game)
 
 	// Assert
 	if err != nil {
@@ -57,7 +57,7 @@ func TestUpdatesAElectronicGame(t *testing.T) {
 		Times(1)
 
 	// Act
-	updated, err := sut.UpdateElectronicGame(game)
+	updated, err := sut.Update(game)
 
 	// Assert
 	if err != nil {
@@ -79,7 +79,7 @@ func TestListElectronicGames(t *testing.T) {
 		Times(1)
 
 	// Act
-	list, err := sut.ListElectronicGames()
+	list, err := sut.List()
 
 	// Assert
 	if err != nil {
@@ -101,7 +101,7 @@ func TestDeleteElectronicGame(t *testing.T) {
 		Times(1)
 
 	// Act
-	err := sut.DeleteElectronicGame(*game.ID)
+	err := sut.Delete(*game.ID)
 
 	// Assert
 	if err != nil {
@@ -119,7 +119,7 @@ func TestGetElectronicGameByID(t *testing.T) {
 		Times(1)
 
 	// Act
-	foundElectronicGame, err := sut.GetElectronicGameByID(*game.ID)
+	foundElectronicGame, err := sut.GetByID(*game.ID)
 
 	// Assert
 	if err != nil {
