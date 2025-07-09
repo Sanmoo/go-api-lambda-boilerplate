@@ -1,5 +1,6 @@
-coverage.html
-coverage.out
+cover.html
+cover.out
+cover.out.tmp
 mock*.go
 .vscode
 .env

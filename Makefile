@@ -41,8 +41,8 @@ adapters/inbound/aws/%/bootstrap: adapters/inbound/aws/%/lambda.go $(HTTP_SRCS) 
 test:
 	go generate ./core/mocks
 	cd core && \
-		go test -coverprofile=coverage.out -v ./... && \
-		go tool cover -html=coverage.out -o .
+		go test -coverprofile=cover.out ./... && \
+		go tool cover -html=cover.out -o cover.html
 	
 # Deployment tasks
 terraform-init:
