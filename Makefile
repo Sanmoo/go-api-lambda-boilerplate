@@ -37,13 +37,6 @@ AWS_COMMON_SRCS := $(shell find adapters/inbound/aws -name "*.go" ! -name "lambd
 adapters/inbound/aws/%/bootstrap: adapters/inbound/aws/%/lambda.go $(HTTP_SRCS) $(AWS_COMMON_SRCS)
 	cd adapters/inbound/aws/$* && GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bootstrap lambda.go
 
-# Test Tasks
-test:
-	go generate ./core/mocks
-	cd core && \
-		go test -coverprofile=cover.out ./... && \
-		go tool cover -html=cover.out -o cover.html
-	
 # Deployment tasks
 terraform-init:
 	cd infra && terraform init
@@ -64,11 +57,38 @@ make plan-destroy:
 deploy:
 	cd adapters/inbound/aws/infra && terraform apply plan
 	
-# Development tasks
+# Development and Testing tasks
+CORE_SRCS := $(shell find core -name "*.go")
+
+.PHONY: server
 server:
 	cd adapters/inbound/local && go run .
+
+.PHONY: deps
+deps:
+	go install go.uber.org/mock/mockgen@latest
+	go install github.com/vladopajic/go-test-coverage/v2@latest
+
+.PHONY: test
+test: core/cover.out
+
+core/cover.out: $(CORE_SRCS)
+	go generate ./core/mocks
+	cd core && go test ./... -coverprofile=./cover.out.tmp -covermode=atomic -coverpkg=./...
+	cd core && cat ./cover.out.tmp | grep -v "_generated.go" > ./cover.out
+	
+.PHONY: check-coverage
+check-coverage: core/cover.out
+	cd core && go tool cover -html=cover.out -o cover.html
+	go-test-coverage --config=./.testcoverage.yaml
+	
+# Tasks for CI Server
+.PHONY: check-coverage-ci
+check-coverage-ci: core/cover.out
+	go-test-coverage --config=./.testcoverage.yaml
 	
 # Cleanup Tasks
+.PHONY: clean-lambdas
 clean-lambdas:
 	rm -rf lambdas/books/bootstrap
 	rm -rf lambdas/infra/artifacts
@@ -76,6 +96,7 @@ clean-lambdas:
 	rm -rf infra/plan
 	rm -rf lambdas/infra/plan
 	
+.PHONY: clean
 clean: clean-lambdas
 	rm -rf adapters/inbound/http/openapi.yml
 	rm -rf api/node_modules
