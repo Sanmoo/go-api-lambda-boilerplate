@@ -3,6 +3,7 @@ package http
 import (
 	"errors"
 
+	"github.com/Sanmoo/go-api-lambda-boilerplate/adapters/outbound/storage"
 	"github.com/Sanmoo/go-api-lambda-boilerplate/core/model"
 )
 
@@ -135,7 +136,7 @@ func NonElectronicGameFromModel(game *model.NonElectronicGame) *NonElectronicGam
 		Id:     game.ID,
 		Title:  game.Title,
 		Rating: game.Rating,
-		Type:   (*NonElectronicGameType)(&game.Type),
+		Type:   storage.Ptr(NonElectronicGameType(game.Type)),
 		Status: (*NonElectronicGameStatus)(game.Status),
 	}
 }

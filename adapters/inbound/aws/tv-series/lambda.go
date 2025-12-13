@@ -9,6 +9,6 @@ import (
 
 func main() {
 	aws.ListenAndServe(&aws.TVSeriesHandler{
-		TvSeriesHandler: *http.NewTvSeriesHandler(usecases.NewTVSeriesUsecases(memory.NewTvSeriesRepository())),
+		TvSeriesHandler: *http.NewTvSeriesHandler(usecases.NewTVSeriesUsecases(memory.NewTVSeriesRepository())),
 	}, "tv-series")
 }

@@ -38,8 +38,8 @@ func respondWithJSON(responseData responseData) error {
 	jsonRes, err := json.Marshal(responseData.data)
 
 	if err != nil {
-		// This should not happen
-		panic(err)
+		http.Error(responseData.w, "Internal server error", http.StatusInternalServerError)
+		return err
 	}
 
 	responseData.w.Header().Set("Content-Type", "application/json")

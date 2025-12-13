@@ -27,7 +27,7 @@ func newLocalHandler() *LocalHandler {
 	return &LocalHandler{
 		BooksHandler:              *adpt.NewBooksHandler(usecases.NewBooksUsecases(memory.NewBooksRepository())),
 		MoviesHandler:             *adpt.NewMoviesHandler(usecases.NewMoviesUsecases(memory.NewMoviesRepository())),
-		TvSeriesHandler:           *adpt.NewTvSeriesHandler(usecases.NewTVSeriesUsecases(memory.NewTvSeriesRepository())),
+		TvSeriesHandler:           *adpt.NewTvSeriesHandler(usecases.NewTVSeriesUsecases(memory.NewTVSeriesRepository())),
 		ElectronicGamesHandler:    *adpt.NewElectronicGamesHandler(usecases.NewElectronicGamesUsecases(memory.NewElectronicGamesRepository())),
 		NonElectronicGamesHandler: *adpt.NewNonElectronicGamesHandler(usecases.NewNonElectronicGamesUsecases(memory.NewNonElectronicGamesRepository())),
 	}

@@ -2,7 +2,6 @@ package http
 
 import (
 	"encoding/json"
-	"io"
 	"net/http"
 
 	_ "embed"
@@ -21,25 +20,42 @@ func NewBooksHandler(usecases *cases.BooksUsecases) *BooksHandler {
 }
 
 func (b *BooksHandler) BooksList(w http.ResponseWriter, r *http.Request, params BooksListParams) {
-	books, _ := b.usecases.ListBooks()
+	books, err := b.usecases.ListBooks()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	response := make([]Book, len(books))
-
 	for i := range books {
 		response[i] = *BookFromModel(&books[i])
 	}
-
-	jsonRes, _ := json.Marshal(response)
-	w.Write([]byte(jsonRes))
+	jsonRes, err := json.Marshal(response)
+	if err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonRes)
 }
 
 func (b *BooksHandler) BooksCreate(w http.ResponseWriter, r *http.Request) {
-	var requestBook Book
-	requestPayload, _ := io.ReadAll(r.Body)
-	json.Unmarshal(requestPayload, &requestBook)
-
-	createdBook, _ := b.usecases.CreateBook(*requestBook.ToModel())
-	jsonRes, _ := json.Marshal(BookFromModel(&createdBook))
-	w.Write([]byte(jsonRes))
+	requestBook, err := unmarshalFromReq[Book](r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	createdBook, err := b.usecases.CreateBook(*requestBook.ToModel())
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	jsonRes, err := json.Marshal(BookFromModel(&createdBook))
+	if err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonRes)
 }
 
 func (b *BooksHandler) BooksRead(w http.ResponseWriter, r *http.Request, id string) {
